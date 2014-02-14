@@ -7,11 +7,11 @@ module ActiveRecord
     module ClassMethods
       def sanitize_sql_hash_for_assignment(attrs)
         attrs.map do |attr, value|
-          "#{connection.quote_column_name(attr)} = #{quote_bound_value(value, attr)}"
+          "#{connection.quote_column_name(attr)} = #{quote_bound_value_with_column(value, attr)}"
         end.join(', ')
       end
 
-      def quote_bound_value(value, column = nil, c = connection)
+      def quote_bound_value_with_column(value, column = nil, c = connection)
         if column.present? && column != c
           record_column = self.columns.select {|col| col.name == column}.first
           c.quote(value, record_column)
